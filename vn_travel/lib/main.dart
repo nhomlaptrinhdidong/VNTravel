@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:vn_travel/Profile.dart';
 
 void main() {
   runApp(const MyApp());
@@ -6,31 +7,34 @@ void main() {
 
 class MyApp extends StatelessWidget {
   const MyApp({Key? key}) : super(key: key);
+
   @override
   Widget build(BuildContext context) {
     return MaterialApp(
-      title: 'Flutter',
       theme: ThemeData(
         primarySwatch: Colors.blue,
+        visualDensity: VisualDensity.adaptivePlatformDensity,
       ),
-      home:HomePage()
+      home: Profile(),
     );
   }
 }
-class HomePage extends StatefulWidget {
-  const HomePage({ Key? key }) : super(key: key);
+
+class View extends StatefulWidget {
+  const View({Key? key}) : super(key: key);
 
   @override
-  _HomePageState createState() => _HomePageState();
+  _ViewState createState() => _ViewState();
 }
 
-class _HomePageState extends State<HomePage> {
+class _ViewState extends State<View> {
   @override
   Widget build(BuildContext context) {
-    return Container(
-      
+    return Scaffold(
+      appBar: AppBar(
+        title: Text('Main'),
+      ),
+      body: const Center(),
     );
   }
 }
-
-
