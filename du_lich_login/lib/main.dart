@@ -1,4 +1,6 @@
-import 'package:du_lich_login/Detail-Post.dart';
+import 'package:du_lich_login/TaskBar/Home/home.dart';
+import 'package:du_lich_login/TaskBar/Setting/setting.dart';
+import 'package:du_lich_login/detailplace.dart';
 import 'package:du_lich_login/TaskBar/main_taskbar.dart';
 import 'package:flutter/material.dart';
 import 'Login-Forgot-Sginup/LoginForm.dart';
@@ -11,7 +13,7 @@ class MyApp extends StatelessWidget {
   Widget build(BuildContext context) {
     return MaterialApp(
       title: 'Welcome to Flutter',
-      home: LoginForm(),
+      home: MainTask(),
     );
   }
 }
