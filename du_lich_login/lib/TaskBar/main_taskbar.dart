@@ -1,4 +1,5 @@
 import 'package:du_lich_login/TaskBar/Home/home.dart';
+import 'package:du_lich_login/TaskBar/Love/love.dart';
 import 'package:du_lich_login/TaskBar/News/news.dart';
 import 'package:du_lich_login/TaskBar/Profile/profile.dart';
 import 'package:du_lich_login/TaskBar/Setting/setting.dart';
@@ -14,16 +15,16 @@ class MainTask extends StatefulWidget {
 class _MainTaskState extends State<MainTask> {
   int currentTab = 0;
   final List<Widget> screen = [
-    HomeScreen(),
-    NewsScreen(),
-    ProfileScreen(),
-    SettingScreen(),
-    SettingScreen(),
+    const HomeScreen(),
+    const NewsScreen(),
+    const ProfileScreen(),
+    const SettingScreen(),
+    const SettingScreen(),
   ];
 
   final PageStorageBucket bucket = PageStorageBucket();
 
-  Widget currentScreen = HomeScreen();
+  Widget currentScreen = const HomeScreen();
 
   @override
   Widget build(BuildContext context) {
@@ -32,17 +33,18 @@ class _MainTaskState extends State<MainTask> {
         child: currentScreen,
         bucket: bucket,
       ),
-      floatingActionButton: FloatingActionButton(
-        child: Icon(Icons.add),
-        onPressed: () {
-          //Thêm bài viết tại đây
-        },
-      ),
+      // floatingActionButton: FloatingActionButton(
+      //   child: Icon(Icons.add),
+      //   onPressed: () {
+      //     //Thêm bài viết tại đây
+      //   },
+      // ),
+
       floatingActionButtonLocation: FloatingActionButtonLocation.centerDocked,
       bottomNavigationBar: BottomAppBar(
-        shape: CircularNotchedRectangle(),
+        shape: const CircularNotchedRectangle(),
         notchMargin: 10,
-        child: Container(
+        child: SizedBox(
           height: 60,
           child: Row(
             mainAxisAlignment: MainAxisAlignment.spaceBetween,
@@ -53,7 +55,7 @@ class _MainTaskState extends State<MainTask> {
                   MaterialButton(
                     onPressed: () {
                       setState(() {
-                        currentScreen = HomeScreen();
+                        currentScreen = const HomeScreen();
                         currentTab = 0;
                       });
                     },
@@ -76,7 +78,7 @@ class _MainTaskState extends State<MainTask> {
                   MaterialButton(
                     onPressed: () {
                       setState(() {
-                        currentScreen = NewsScreen();
+                        currentScreen = const NewsScreen();
                         currentTab = 1;
                       });
                     },
@@ -104,7 +106,35 @@ class _MainTaskState extends State<MainTask> {
                   MaterialButton(
                     onPressed: () {
                       setState(() {
-                        currentScreen = ProfileScreen();
+                        currentScreen = const LoveScreen();
+                        currentTab = 2;
+                      });
+                    },
+                    minWidth: 40,
+                    child: Column(
+                      mainAxisAlignment: MainAxisAlignment.center,
+                      children: [
+                        Icon(
+                          Icons.favorite_outline,
+                          color: currentTab == 2 ? Colors.blue : Colors.grey,
+                        ),
+                        Text('Love',
+                            style: TextStyle(
+                              color:
+                                  currentTab == 2 ? Colors.blue : Colors.grey,
+                            ))
+                      ],
+                    ),
+                  ),
+                ],
+              ),
+              Row(
+                crossAxisAlignment: CrossAxisAlignment.start,
+                children: [
+                  MaterialButton(
+                    onPressed: () {
+                      setState(() {
+                        currentScreen = const ProfileScreen();
                         currentTab = 3;
                       });
                     },
@@ -127,7 +157,7 @@ class _MainTaskState extends State<MainTask> {
                   MaterialButton(
                     onPressed: () {
                       setState(() {
-                        currentScreen = SettingScreen();
+                        currentScreen = const SettingScreen();
                         currentTab = 4;
                       });
                     },

@@ -10,7 +10,7 @@ class NewsScreen extends StatefulWidget {
   _NewsScreenState createState() => _NewsScreenState();
 }
 
-Random random = new Random();
+Random random = Random();
 int randomNumber = random.nextInt(100);
 
 class _NewsScreenState extends State<NewsScreen> {
@@ -18,20 +18,20 @@ class _NewsScreenState extends State<NewsScreen> {
 
   @override
   Widget build(BuildContext context) {
-    final String description =
+    const String description =
         "Flutter is Google’s mobile UI framework for crafting high-quality native interfaces on iOS and Android in record time. Flutter works with existing code, is used by developers and organizations around the world, and is free and open source.";
 
     return Scaffold(
         appBar: AppBar(
-          title: Text('VNTravel'),
+          title: const Text('VNTravel'),
           actions: <Widget>[
             IconButton(
               onPressed: () {},
-              icon: Icon(Icons.search),
+              icon: const Icon(Icons.search),
             ),
             IconButton(
               onPressed: () {},
-              icon: Icon(Icons.messenger_outline_rounded),
+              icon: const Icon(Icons.messenger_outline_rounded),
             )
           ],
           automaticallyImplyLeading: false,
@@ -50,8 +50,8 @@ class _NewsScreenState extends State<NewsScreen> {
         ));
   }
 
-  Container listStory() {
-    return Container(
+  SizedBox listStory() {
+    return SizedBox(
         height: 200,
         child: ListView(
           scrollDirection: Axis.horizontal,
@@ -72,7 +72,7 @@ class _NewsScreenState extends State<NewsScreen> {
 
   Container singleStory(String img, String avt, String username) {
     return Container(
-      margin: EdgeInsets.all(7),
+      margin: const EdgeInsets.all(7),
       child: Stack(
         children: [
           Column(
@@ -95,7 +95,7 @@ class _NewsScreenState extends State<NewsScreen> {
                   width: 2,
                   color: Colors.blue,
                 )),
-            margin: EdgeInsets.fromLTRB(12, 12, 0, 0),
+            margin: const EdgeInsets.fromLTRB(12, 12, 0, 0),
             child: ClipRRect(
               borderRadius: BorderRadius.circular(50),
               child: Image.asset(
@@ -107,12 +107,12 @@ class _NewsScreenState extends State<NewsScreen> {
           ),
           Container(
             width: 100,
-            padding: EdgeInsets.fromLTRB(12, 150, 0, 0),
+            padding: const EdgeInsets.fromLTRB(12, 150, 0, 0),
             child: Column(
               children: [
                 Text(
                   username,
-                  style: TextStyle(
+                  style: const TextStyle(
                     color: Colors.white,
                     fontSize: 13,
                   ),
@@ -129,7 +129,7 @@ class _NewsScreenState extends State<NewsScreen> {
 
   Container function() {
     return Container(
-      padding: EdgeInsets.all(8),
+      padding: const EdgeInsets.all(8),
       decoration: BoxDecoration(
         color: Colors.white,
         boxShadow: [
@@ -137,7 +137,7 @@ class _NewsScreenState extends State<NewsScreen> {
             color: Colors.grey.withOpacity(0.8),
             spreadRadius: 3,
             blurRadius: 3,
-            offset: Offset(0, 3), // changes position of shadow
+            offset: const Offset(0, 3), // changes position of shadow
           ),
         ],
       ),
@@ -145,20 +145,20 @@ class _NewsScreenState extends State<NewsScreen> {
         children: [
           Expanded(
             child: Container(
-              padding: EdgeInsets.only(left: 8),
+              padding: const EdgeInsets.only(left: 8),
               child: Row(
                 children: [
-                  Icon(
+                  const Icon(
                     Icons.videocam_outlined,
                     color: Colors.red,
                   ),
                   Container(
-                      decoration: BoxDecoration(
+                      decoration: const BoxDecoration(
                         border: Border(
                             right: BorderSide(width: 1, color: Colors.grey)),
                       ),
-                      padding: EdgeInsets.only(right: 20),
-                      child: Text('Phát trực tiếp'))
+                      padding: const EdgeInsets.only(right: 20),
+                      child: const Text('Phát trực tiếp'))
                 ],
               ),
             ),
@@ -167,24 +167,24 @@ class _NewsScreenState extends State<NewsScreen> {
           Expanded(
             child: Row(
               children: [
-                Icon(
+                const Icon(
                   Icons.image_outlined,
                   color: Colors.green,
                 ),
                 Container(
-                    decoration: BoxDecoration(
+                    decoration: const BoxDecoration(
                       border: Border(
                           right: BorderSide(width: 1, color: Colors.grey)),
                     ),
-                    padding: EdgeInsets.only(right: 20),
-                    child: Text('Ảnh'))
+                    padding: const EdgeInsets.only(right: 20),
+                    child: const Text('Ảnh'))
               ],
             ),
             flex: 1,
           ),
           Expanded(
             child: Container(
-              padding: EdgeInsets.only(left: 30),
+              padding: const EdgeInsets.only(left: 30),
               child: Row(
                 children: const [
                   Icon(
@@ -211,7 +211,7 @@ class _NewsScreenState extends State<NewsScreen> {
             color: Colors.grey.withOpacity(0.8),
             spreadRadius: 5,
             blurRadius: 7,
-            offset: Offset(0, 3), // changes position of shadow
+            offset: const Offset(0, 3), // changes position of shadow
           ),
         ],
       ),
@@ -242,14 +242,14 @@ class _NewsScreenState extends State<NewsScreen> {
                             padding: const EdgeInsets.fromLTRB(8, 8, 0, 0),
                             child: Text(
                               username,
-                              style: TextStyle(
+                              style: const TextStyle(
                                   fontWeight: FontWeight.bold, fontSize: 18),
                             ),
                           ),
                         ],
                       ),
                       Container(
-                        padding: EdgeInsets.only(left: 8),
+                        padding: const EdgeInsets.only(left: 8),
                         child: Row(
                           children: const [
                             Padding(
@@ -267,27 +267,27 @@ class _NewsScreenState extends State<NewsScreen> {
             ),
           ),
           Container(
-            padding: EdgeInsets.fromLTRB(6, 8, 0, 6),
+            padding: const EdgeInsets.fromLTRB(6, 8, 0, 6),
             child: Row(
               children: [
-                Container(
-                    width: 400,
-                    child: new DescriptionTextWidget(text: description)),
+                SizedBox(
+                    width: 360,
+                    child: DescriptionTextWidget(text: description)),
               ],
             ),
           ),
           Image.asset('images/user/$images', width: 450, fit: BoxFit.cover),
           Container(
-            decoration: BoxDecoration(
+            decoration: const BoxDecoration(
               border: Border(bottom: BorderSide(width: 1, color: Colors.grey)),
             ),
-            padding: EdgeInsets.fromLTRB(20, 30, 12, 12),
+            padding: const EdgeInsets.fromLTRB(20, 30, 12, 12),
             child: Row(
               children: [
                 Expanded(
                   child: Row(
                     children: [
-                      CircleAvatar(
+                      const CircleAvatar(
                         radius: 12,
                         backgroundColor: Colors.blue,
                         child: Icon(
@@ -296,7 +296,7 @@ class _NewsScreenState extends State<NewsScreen> {
                           color: Colors.white,
                         ),
                       ),
-                      CircleAvatar(
+                      const CircleAvatar(
                         radius: 12,
                         backgroundColor: Colors.red,
                         child: Icon(
@@ -312,15 +312,15 @@ class _NewsScreenState extends State<NewsScreen> {
                     ],
                   ),
                 ),
-                Padding(
-                  padding: const EdgeInsets.only(right: 12),
+                const Padding(
+                  padding: EdgeInsets.only(right: 12),
                   child: Text('645 bình luận • 490 lượt chia sẻ'),
                 )
               ],
             ),
           ),
           Container(
-            padding: EdgeInsets.fromLTRB(25, 0, 25, 12),
+            padding: const EdgeInsets.fromLTRB(25, 0, 25, 12),
             child: Row(
               children: [
                 Expanded(
@@ -328,8 +328,8 @@ class _NewsScreenState extends State<NewsScreen> {
                     children: [
                       IconButton(
                         icon: liked
-                            ? Icon(Icons.thumb_up)
-                            : Icon(Icons.thumb_up_alt_outlined),
+                            ? const Icon(Icons.thumb_up)
+                            : const Icon(Icons.thumb_up_alt_outlined),
                         color: liked ? Colors.blue : Colors.black,
                         onPressed: () {
                           liked = !liked;
@@ -352,9 +352,9 @@ class _NewsScreenState extends State<NewsScreen> {
                     children: [
                       IconButton(
                         onPressed: () {},
-                        icon: Icon(Icons.messenger_outline),
+                        icon: const Icon(Icons.messenger_outline),
                       ),
-                      Text('Comment')
+                      const Text('Comment')
                     ],
                   ),
                   flex: 2,
@@ -367,9 +367,9 @@ class _NewsScreenState extends State<NewsScreen> {
                         icon: Transform(
                             alignment: Alignment.center,
                             transform: Matrix4.rotationY(math.pi),
-                            child: Icon(Icons.reply)),
+                            child: const Icon(Icons.reply)),
                       ),
-                      Text('Share')
+                      const Text('Share')
                     ],
                   ),
                   flex: 1,
@@ -384,7 +384,7 @@ class _NewsScreenState extends State<NewsScreen> {
 
   Container titleSection() {
     return Container(
-      decoration: BoxDecoration(
+      decoration: const BoxDecoration(
         border: Border(bottom: BorderSide(width: 1, color: Colors.grey)),
       ),
       child: Padding(
@@ -401,7 +401,7 @@ class _NewsScreenState extends State<NewsScreen> {
             ),
             Expanded(
               child: Container(
-                padding: EdgeInsets.symmetric(horizontal: 20),
+                padding: const EdgeInsets.symmetric(horizontal: 20),
                 child: TextField(
                   decoration: InputDecoration(
                     border: OutlineInputBorder(
@@ -409,7 +409,7 @@ class _NewsScreenState extends State<NewsScreen> {
                     ),
                     hintText: 'Bạn đang nghĩ gì?',
                     isDense: true,
-                    contentPadding: EdgeInsets.all(12),
+                    contentPadding: const EdgeInsets.all(12),
                   ),
                 ),
               ),
@@ -424,11 +424,11 @@ class _NewsScreenState extends State<NewsScreen> {
 class DescriptionTextWidget extends StatefulWidget {
   final String text;
 
-  DescriptionTextWidget({required this.text});
+  // ignore: use_key_in_widget_constructors
+  const DescriptionTextWidget({required this.text});
 
   @override
-  _DescriptionTextWidgetState createState() =>
-      new _DescriptionTextWidgetState();
+  _DescriptionTextWidgetState createState() => _DescriptionTextWidgetState();
 }
 
 class _DescriptionTextWidgetState extends State<DescriptionTextWidget> {
@@ -441,9 +441,9 @@ class _DescriptionTextWidgetState extends State<DescriptionTextWidget> {
   void initState() {
     super.initState();
 
-    if (widget.text.length > 70) {
-      firstHalf = widget.text.substring(0, 70);
-      secondHalf = widget.text.substring(70, widget.text.length);
+    if (widget.text.length > 40) {
+      firstHalf = widget.text.substring(0, 40);
+      secondHalf = widget.text.substring(40, widget.text.length);
     } else {
       firstHalf = widget.text;
       secondHalf = "";
@@ -452,33 +452,32 @@ class _DescriptionTextWidgetState extends State<DescriptionTextWidget> {
 
   @override
   Widget build(BuildContext context) {
-    return new Container(
-      // padding: new EdgeInsets.symmetric(horizontal: 10.0, vertical: 10.0),
+    return Container(
       child: secondHalf.isEmpty
-          ? new Column(
-              children: <Widget>[new Text(firstHalf)],
+          ? Column(
+              children: <Widget>[Text(firstHalf)],
             )
-          : new Column(
+          : Column(
               children: <Widget>[
                 flag
                     ? Row(
                         mainAxisAlignment: MainAxisAlignment.start,
                         children: [
-                          new Text((firstHalf + "...")),
+                          Text((firstHalf + "...")),
                         ],
                       )
                     : Column(
                         children: [
-                          new Text((firstHalf + secondHalf)),
+                          Text((firstHalf + secondHalf)),
                         ],
                       ),
-                new InkWell(
-                  child: new Row(
+                InkWell(
+                  child: Row(
                     mainAxisAlignment: MainAxisAlignment.start,
                     children: <Widget>[
-                      new Text(
+                      Text(
                         flag ? "show more" : "show less",
-                        style: new TextStyle(color: Colors.grey),
+                        style: const TextStyle(color: Colors.grey),
                       ),
                     ],
                   ),

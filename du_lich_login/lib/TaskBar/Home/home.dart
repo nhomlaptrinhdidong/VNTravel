@@ -1,7 +1,9 @@
+import 'dart:convert';
+
 import 'package:flutter/foundation.dart';
 import 'package:flutter/material.dart';
-
-import 'dart:math' as math;
+import '../../api.dart';
+import 'detailplace.dart';
 
 class HomeScreen extends StatefulWidget {
   const HomeScreen({Key? key}) : super(key: key);
@@ -12,6 +14,9 @@ class HomeScreen extends StatefulWidget {
 
 bool liked = false;
 
+Iterable listdiadanh = [];
+Iterable listdiadanhhot = [];
+
 class _HomeScreenState extends State<HomeScreen> {
   @override
   Widget build(BuildContext context) {
@@ -20,9 +25,9 @@ class _HomeScreenState extends State<HomeScreen> {
       child: Scaffold(
           drawer: Drawer(
             child: Material(
-              color: Color.fromRGBO(50, 75, 205, 1),
+              color: const Color.fromRGBO(50, 75, 205, 1),
               child: ListView(
-                padding: EdgeInsets.all(8),
+                padding: const EdgeInsets.all(8),
                 children: const [
                   SizedBox(
                     height: 48,
@@ -32,92 +37,289 @@ class _HomeScreenState extends State<HomeScreen> {
             ),
           ),
           appBar: PreferredSize(
-            preferredSize: Size.fromHeight(70.0),
+            preferredSize: const Size.fromHeight(70.0),
             child: AppBar(
-              bottom: TabBar(
+              bottom: const TabBar(
                 tabs: [
-                  Container(
+                  SizedBox(
                       height: 30,
                       child: Tab(
                         text: 'Du Lịch',
                       )),
-                  Container(
+                  SizedBox(
                       height: 30,
                       child: Tab(
                         text: 'Nghĩ Dưỡng',
                       )),
-                  Container(
+                  SizedBox(
                       height: 30,
                       child: Tab(
                         text: 'Dã Ngoại',
                       )),
-                  Container(
+                  SizedBox(
                       height: 30,
                       child: Tab(
                         text: 'Cấm Trại',
                       )),
                 ],
               ),
-              title: Text('VNTravel'),
+              title: const Text('VNTravel'),
               actions: <Widget>[
                 IconButton(
                   onPressed: () {},
-                  icon: Icon(Icons.search),
+                  icon: const Icon(Icons.search),
                 ),
                 IconButton(
                   onPressed: () {},
-                  icon: Icon(Icons.messenger_outline_rounded),
+                  icon: const Icon(Icons.messenger_outline_rounded),
                 )
               ],
             ),
           ),
-          body: TabBarView(
-            children: const [
-              TabTravel(),
-              TabTravel(),
-              TabTravel(),
-              Text('data')
-            ],
+          body: const TabBarView(
+            children: [TabTravel(), TabTravel(), TabTravel(), Text('data')],
           )),
     );
   }
 }
 
-class TabTravel extends StatelessWidget {
-  const TabTravel({
-    Key? key,
-  }) : super(key: key);
+class TabTravel extends StatefulWidget {
+  const TabTravel({Key? key}) : super(key: key);
+
+  @override
+  _TabTravelState createState() => _TabTravelState();
+}
+
+class _TabTravelState extends State<TabTravel> {
+  Future<void> loaddata() async {
+    await API(url: "http://10.0.2.2/travel/api/listdiadanh.php")
+        .getDataString()
+        .then((value) {
+      listdiadanh = json.decode(value);
+    });
+    await API(url: "http://10.0.2.2/travel/api/listdiadanhhot.php")
+        .getDataString()
+        .then((value) {
+      listdiadanhhot = json.decode(value);
+    });
+    setState(() {});
+  }
+
+  @override
+  void initState() {
+    super.initState();
+    loaddata();
+  }
 
   @override
   Widget build(BuildContext context) {
     return ListView(children: [
-      Container(
-        height: 200,
-        child: ListView(
-          scrollDirection: Axis.horizontal,
-          children: [
-            ListDiaDanhHot('Núi Phú Sĩ', 'nui.jpg'),
-            ListDiaDanhHot('Núi Cô Tiên', 'nuicotien.jpg'),
-            ListDiaDanhHot('Đia Đạo Củ Chi', 'download.jpg'),
-            ListDiaDanhHot('Núi Phú Sĩ', 'nui.jpg'),
-          ],
-        ),
-      ),
-      Wrap(
-        children: [
-          ListDiaDanh('Núi Cô Tiên', 'nuicotien.jpg'),
-          ListDiaDanh('Đia Đạo Củ Chi', 'download.jpg'),
-          ListDiaDanh('Đia Đạo Củ Chi', 'download.jpg'),
-          ListDiaDanh('Núi Phú Sĩ', 'nui.jpg'),
-        ],
-      ),
+      listdiadanhhot.isNotEmpty
+          ? DiaDanhHot()
+          : const Center(child: CircularProgressIndicator()),
+      ListDiaDanh(context),
     ]);
+  }
+
+  // ignore: non_constant_identifier_names
+  SizedBox DiaDanhHot() {
+    return SizedBox(
+        height: 200,
+        child: ListView.builder(
+            scrollDirection: Axis.horizontal,
+            itemCount: listdiadanhhot.length,
+            itemBuilder: (context, i) {
+              return Container(
+                margin: const EdgeInsets.all(6),
+                child: Stack(
+                  children: [
+                    Column(
+                      children: [
+                        ClipRRect(
+                          borderRadius: BorderRadius.circular(12),
+                          child: Image.network(
+                            'http://10.0.2.2/travel/img/${listdiadanhhot.elementAt(i)["hinh_anh"].toString()}',
+                            height: 180,
+                            width: 330,
+                            fit: BoxFit.cover,
+                          ),
+                        ),
+                      ],
+                    ),
+                    Container(
+                        margin: const EdgeInsets.only(top: 120),
+                        height: 60,
+                        width: 330,
+                        decoration: BoxDecoration(
+                            borderRadius: BorderRadius.circular(12),
+                            color: Colors.black45),
+                        child: Container(
+                          padding: const EdgeInsets.symmetric(horizontal: 6),
+                          child: Column(
+                            children: [
+                              Column(
+                                children: [
+                                  Text(
+                                    listdiadanhhot
+                                        .elementAt(i)["ten"]
+                                        .toString(),
+                                    style: const TextStyle(
+                                        color: Colors.white,
+                                        fontSize: 18,
+                                        fontWeight: FontWeight.bold),
+                                    overflow: TextOverflow.ellipsis,
+                                    maxLines: 2,
+                                  ),
+                                  Row(
+                                    children: [
+                                      Container(
+                                        padding: const EdgeInsets.only(left: 3),
+                                        child: const Text('5',
+                                            style: TextStyle(
+                                                color: Colors.white,
+                                                fontSize: 18,
+                                                fontWeight: FontWeight.bold)),
+                                      ),
+                                    ],
+                                  )
+                                ],
+                              ),
+                            ],
+                          ),
+                        )),
+                  ],
+                ),
+              );
+            }));
+  }
+
+  // ignore: non_constant_identifier_names
+  RenderObjectWidget ListDiaDanh(BuildContext context) {
+    return listdiadanh.isNotEmpty
+        ? DiaDanh(context)
+        : const Center(child: CircularProgressIndicator());
+  }
+
+  // ignore: non_constant_identifier_names
+  Wrap DiaDanh(BuildContext context) {
+    return Wrap(
+        children: List.generate(
+            listdiadanh.length,
+            (i) => GestureDetector(
+                  onTap: () {
+                    Navigator.push(
+                      context,
+                      MaterialPageRoute(
+                          builder: (context) => DetaiPlace(
+                              id: listdiadanh.elementAt(i)["id"].toString())),
+                    );
+                  },
+                  child: Container(
+                    margin: const EdgeInsets.all(7),
+                    child: Stack(
+                      children: [
+                        Column(
+                          children: [
+                            ClipRRect(
+                              borderRadius: BorderRadius.circular(12),
+                              child: Image.network(
+                                'http://10.0.2.2/travel/img/${listdiadanh.elementAt(i)["hinh_anh"].toString()}',
+                                height: 180,
+                                width: 180,
+                                fit: BoxFit.cover,
+                              ),
+                            ),
+                          ],
+                        ),
+                        Container(
+                            margin: const EdgeInsets.only(top: 120),
+                            height: 60,
+                            width: 180,
+                            decoration: BoxDecoration(
+                                borderRadius: BorderRadius.circular(12),
+                                color: Colors.black45),
+                            child: Container(
+                              padding:
+                                  const EdgeInsets.symmetric(horizontal: 6),
+                              child: Column(
+                                children: [
+                                  Column(
+                                    children: [
+                                      Text(
+                                        listdiadanh
+                                            .elementAt(i)["ten"]
+                                            .toString(),
+                                        style: const TextStyle(
+                                            color: Colors.white,
+                                            fontSize: 18,
+                                            fontWeight: FontWeight.bold),
+                                        overflow: TextOverflow.ellipsis,
+                                        maxLines: 2,
+                                      ),
+                                      Row(
+                                        children: [
+                                          Row(
+                                            children: List.generate(
+                                              int.parse(listdiadanh
+                                                  .elementAt(i)["danh_gia"]
+                                                  .toString()),
+                                              (index) => const Padding(
+                                                padding: EdgeInsets.symmetric(
+                                                    horizontal: 3),
+                                                child: Icon(
+                                                  Icons.star,
+                                                  color: Colors.red,
+                                                ),
+                                              ),
+                                            ),
+                                          ),
+                                          Row(
+                                            children: List.generate(
+                                              (5 -
+                                                  int.parse(listdiadanh
+                                                      .elementAt(i)["danh_gia"]
+                                                      .toString())),
+                                              (index) => const Padding(
+                                                padding: EdgeInsets.symmetric(
+                                                    horizontal: 3),
+                                                child: Icon(
+                                                  Icons.star_border,
+                                                  color: Colors.red,
+                                                ),
+                                              ),
+                                            ),
+                                          ),
+                                          Container(
+                                            padding:
+                                                const EdgeInsets.only(left: 3),
+                                            child: Text(
+                                                listdiadanh
+                                                    .elementAt(i)["danh_gia"]
+                                                    .toString(),
+                                                style: const TextStyle(
+                                                    color: Colors.white,
+                                                    fontSize: 18,
+                                                    fontWeight:
+                                                        FontWeight.bold)),
+                                          ),
+                                        ],
+                                      )
+                                    ],
+                                  ),
+                                ],
+                              ),
+                            )),
+                      ],
+                    ),
+                  ),
+                )));
   }
 }
 
+// ignore: non_constant_identifier_names
 Container ListDiaDanhHot(String name, String img) {
   return Container(
-    margin: EdgeInsets.all(7),
+    margin: const EdgeInsets.all(6),
     child: Stack(
       children: [
         Column(
@@ -147,7 +349,7 @@ Container ListDiaDanhHot(String name, String img) {
                     children: [
                       Text(
                         name,
-                        style: TextStyle(
+                        style: const TextStyle(
                             color: Colors.white,
                             fontSize: 18,
                             fontWeight: FontWeight.bold),
@@ -156,97 +358,9 @@ Container ListDiaDanhHot(String name, String img) {
                       ),
                       Row(
                         children: [
-                          Rate(),
-                          Rate(),
-                          Rate(),
-                          Rate(),
-                          Rate(),
-                          Container(
-                            padding: EdgeInsets.only(left: 3),
-                            child: Text('5',
-                                style: TextStyle(
-                                    color: Colors.white,
-                                    fontSize: 18,
-                                    fontWeight: FontWeight.bold)),
-                          ),
-                        ],
-                      )
-                    ],
-                  ),
-                ],
-              ),
-            )),
-      ],
-    ),
-  );
-}
-
-class Rate extends StatelessWidget {
-  const Rate({
-    Key? key,
-  }) : super(key: key);
-
-  @override
-  Widget build(BuildContext context) {
-    return const Padding(
-      padding: EdgeInsets.symmetric(horizontal: 3),
-      child: Icon(
-        Icons.star,
-        color: Colors.red,
-      ),
-    );
-  }
-}
-
-Container ListDiaDanh(String name, String img) {
-  return Container(
-    margin: const EdgeInsets.all(7),
-    child: Stack(
-      children: [
-        Column(
-          children: [
-            ClipRRect(
-              borderRadius: BorderRadius.circular(12),
-              child: Image.asset(
-                'images/diadanh/$img',
-                height: 180,
-                width: 190,
-                fit: BoxFit.cover,
-              ),
-            ),
-          ],
-        ),
-        Container(
-            margin: const EdgeInsets.only(top: 120),
-            height: 60,
-            width: 190,
-            decoration: BoxDecoration(
-                borderRadius: BorderRadius.circular(12), color: Colors.black45),
-            child: Container(
-              padding: const EdgeInsets.symmetric(horizontal: 6),
-              child: Column(
-                children: [
-                  Column(
-                    children: [
-                      Text(
-                        name,
-                        style: TextStyle(
-                            color: Colors.white,
-                            fontSize: 18,
-                            fontWeight: FontWeight.bold),
-                        overflow: TextOverflow.ellipsis,
-                        maxLines: 2,
-                      ),
-                      Row(
-                        children: [
-                          Rate(),
-                          Rate(),
-                          Rate(),
-                          Rate(),
-                          Rate(),
                           Container(
                             padding: const EdgeInsets.only(left: 3),
-                            child: Text('5',
+                            child: const Text('5',
                                 style: TextStyle(
                                     color: Colors.white,
                                     fontSize: 18,
