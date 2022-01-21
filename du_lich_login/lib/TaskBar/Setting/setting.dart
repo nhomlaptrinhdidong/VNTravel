@@ -1,3 +1,4 @@
+import 'package:du_lich_login/Login-Forgot-Sginup/LoginForm.dart';
 import 'package:flutter/material.dart';
 
 String userAvatarUrl = 'https://scontent.fsgn8-2.fna.fbcdn.net/v/t1.6435-9/138778243_869342370492678_7336130306854756342_n.jpg?_nc_cat=110&cb=c578a115-2e46c7d2&ccb=1-5&_nc_sid=09cbfe&_nc_ohc=EQXd37AU4mkAX-3vDoY&_nc_ht=scontent.fsgn8-2.fna&oh=00_AT-3IGz8RwKkYWsKT0nK9TslWWwTYH6cVtGkLvcGIkUOwQ&oe=61DF6017';
@@ -170,6 +171,13 @@ class _SettingScreenState extends State<SettingScreen> {
                     child: ListTile(
                       leading: Icon(Icons.logout),
                       title: Text('Logout'),
+                      // onTap: () {
+                      //   Navigator.push(
+                      //       context,
+                      //       MaterialPageRoute(
+                      //           builder: (context) => LoginForm()),
+                      //     );
+                      // },
                     ),
                   ),
                 )
