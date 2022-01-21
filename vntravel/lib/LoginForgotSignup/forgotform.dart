@@ -1,3 +1,4 @@
+import 'package:du_lich_login/LoginForgotSignup/signup_form.dart';
 import 'package:flutter/material.dart';
 import '../TaskBar/Home/home.dart';
 
@@ -95,7 +96,11 @@ class _ForgotformState extends State<Forgotform> {
                   children: [
                     TextButton(
                         onPressed: () {
-                          Navigator.pushNamed(context, '/signupform');
+                          Navigator.push(
+                            context,
+                            MaterialPageRoute(
+                                builder: (context) => const SignupForm()),
+                          );
                         },
                         child: const Text('SIGN UP')),
                     TextButton(

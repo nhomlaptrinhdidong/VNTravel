@@ -1,7 +1,11 @@
 import 'dart:convert';
 
+import 'package:du_lich_login/LoginForgotSignup/forgotform.dart';
+import 'package:du_lich_login/LoginForgotSignup/signup_form.dart';
+import 'package:du_lich_login/TaskBar/main_taskbar.dart';
 import 'package:flutter/material.dart';
-
+// ignore: import_of_legacy_library_into_null_safe
+import 'package:flutter_session/flutter_session.dart';
 import '../api.dart';
 
 class LoginForm extends StatefulWidget {
@@ -20,6 +24,46 @@ class _LoginFormState extends State<LoginForm> {
   Iterable s = [];
   @override
   Widget build(BuildContext context) {
+    Future<void> setSession() async {
+      String session = _ten_dang_nhap.text;
+      await FlutterSession().set('myData', session);
+      setState(() {});
+    }
+
+    Future<void> login() async {
+      await API(
+              url:
+                  "http://10.0.2.2/travel/api/login.php?ten_dang_nhap='${_ten_dang_nhap.text}'&mat_khau='${_mat_khau.text}'")
+          .getDataString()
+          .then((value) {
+        s = json.decode(value);
+        if (s.elementAt(0)["kq"].toString() == "true") {
+          setSession();
+          Navigator.pushAndRemoveUntil(
+              context,
+              MaterialPageRoute(builder: (context) => const MainTask()),
+              (Route<dynamic> route) => false);
+        } else {
+          showDialog(
+              context: context,
+              builder: (BuildContext builder) {
+                return AlertDialog(
+                  title: Row(children: const [
+                    Text("Vui lòng kiểm tra lại!"),
+                  ]),
+                  actions: [
+                    TextButton(
+                        onPressed: () {
+                          Navigator.pop(context);
+                        },
+                        child: const Text('Đóng'))
+                  ],
+                );
+              });
+        }
+      });
+    }
+
     return Scaffold(
         body: ListView(
       children: [
@@ -87,33 +131,7 @@ class _LoginFormState extends State<LoginForm> {
                       style: TextStyle(color: Colors.white),
                     ),
                     onPressed: () {
-                      API(url: "http://10.0.2.2/travel/api/login.php?ten_dang_nhap='${_ten_dang_nhap.text}'&mat_khau='${_mat_khau.text}'")
-                          .getDataString()
-                          .then((value) {
-                        s = json.decode(value);
-                        setState(() {
-                          if (s.elementAt(0)["kq"].toString() == "true") {
-                            Navigator.pushNamed(context, '/maintask');
-                          } else {
-                            showDialog(
-                                context: context,
-                                builder: (BuildContext builder) {
-                                  return AlertDialog(
-                                    title: Row(children: const [
-                                      Text("Vui lòng kiểm tra lại!"),
-                                    ]),
-                                    actions: [
-                                      TextButton(
-                                          onPressed: () {
-                                            Navigator.pop(context);
-                                          },
-                                          child: const Text('Đóng'))
-                                    ],
-                                  );
-                                });
-                          }
-                        });
-                      });
+                      login();
                     },
                     style: OutlinedButton.styleFrom(
                       backgroundColor: const Color(0xff7209b7),
@@ -133,12 +151,20 @@ class _LoginFormState extends State<LoginForm> {
                   children: [
                     TextButton(
                         onPressed: () {
-                          Navigator.pushNamed(context, '/signupform');
+                          Navigator.push(
+                            context,
+                            MaterialPageRoute(
+                                builder: (context) => const SignupForm()),
+                          );
                         },
                         child: const Text('SIGN UP?')),
                     TextButton(
                         onPressed: () {
-                          Navigator.pushNamed(context, '/forgotform');
+                          Navigator.push(
+                            context,
+                            MaterialPageRoute(
+                                builder: (context) => const Forgotform()),
+                          );
                         },
                         child: const Text('FORGOT PASSWORD')),
                   ],

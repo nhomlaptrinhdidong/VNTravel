@@ -1,3 +1,4 @@
+import 'package:du_lich_login/LoginForgotSignup/loginform.dart';
 import 'package:flutter/material.dart';
 
 class SignupForm extends StatefulWidget {
@@ -116,7 +117,11 @@ class _SignupFormState extends State<SignupForm> {
                   children: [
                     TextButton(
                         onPressed: () {
-                          Navigator.pushNamed(context, '/');
+                          Navigator.push(
+                            context,
+                            MaterialPageRoute(
+                                builder: (context) => const LoginForm()),
+                          );
                         },
                         child: const Text('LOGIN')),
                   ],

@@ -1,7 +1,10 @@
 import 'dart:convert';
 import 'package:flutter/material.dart';
+// ignore: import_of_legacy_library_into_null_safe
+import 'package:flutter_session/flutter_session.dart';
 import 'package:map_launcher/map_launcher.dart';
 import '../../api.dart';
+import 'package:flutter_rating_bar/flutter_rating_bar.dart';
 
 class DetaiPlace extends StatefulWidget {
   final String id;
@@ -13,13 +16,38 @@ class DetaiPlace extends StatefulWidget {
 
 class _DetaiPlaceState extends State<DetaiPlace> {
   Iterable chitietdiadanh = [];
+  Iterable checklove = [];
+  Iterable listquanan = [];
+  double rate = 0;
+  String username = "";
+  Future<void> love(String type) async {
+    await API(
+            url:
+                "http://10.0.2.2/travel/api/${type}_yeu_thich_dia_danh.php?id_nguoi_dung='$username'&id_dia_danh='${widget.id}'")
+        .getDataString();
+  }
+
   Future<void> chitiet() async {
+    username = await FlutterSession().get("myData");
     await API(
             url:
                 "http://10.0.2.2/travel/api/chitietdiadanh.php?id=${widget.id}")
         .getDataString()
         .then((value) {
       chitietdiadanh = json.decode(value);
+    });
+    await API(
+            url:
+                "http://10.0.2.2/travel/api/check_yeu_thich.php?id_nguoi_dung='$username'&id_dia_danh='${widget.id}'")
+        .getDataString()
+        .then((value) {
+      checklove = json.decode(value);
+    });
+    await API(
+            url: "http://10.0.2.2/travel/api/listquanan.php?id='${widget.id}'")
+        .getDataString()
+        .then((value) {
+      listquanan = json.decode(value);
     });
     setState(() {});
   }
@@ -47,7 +75,7 @@ class _DetaiPlaceState extends State<DetaiPlace> {
       ),
       body: chitietdiadanh.isNotEmpty
           ? chiTietDiaDanh()
-          : const CircularProgressIndicator(),
+          : const Center(child: CircularProgressIndicator()),
     );
   }
 
@@ -62,21 +90,43 @@ class _DetaiPlaceState extends State<DetaiPlace> {
         //Tên địa danh
         Row(
           children: [
-            Padding(
-              padding: const EdgeInsets.only(top: 20, left: 20),
-              child: Text(
-                chitietdiadanh.elementAt(0)['ten'].toString(),
-                style:
-                    const TextStyle(fontSize: 40, fontWeight: FontWeight.w300),
+            Expanded(
+              child: Padding(
+                padding: const EdgeInsets.only(top: 20, left: 20),
+                child: Text(
+                  chitietdiadanh.elementAt(0)['ten'].toString(),
+                  style: const TextStyle(
+                      fontSize: 40, fontWeight: FontWeight.w300),
+                ),
               ),
             ),
-            Expanded(
-              child: IconButton(
-                  onPressed: () {
-                    openMap(chitietdiadanh);
-                  },
-                  icon: const Icon(Icons.location_on_outlined)),
-            )
+            IconButton(
+                onPressed: () {
+                  openMap(chitietdiadanh);
+                },
+                icon: const Icon(
+                  Icons.location_on_outlined,
+                  size: 30,
+                )),
+            IconButton(
+              icon: checklove.isNotEmpty
+                  ? const Icon(
+                      Icons.favorite,
+                      color: Colors.red,
+                      size: 30,
+                    )
+                  : const Icon(
+                      Icons.favorite_outline,
+                      color: Colors.red,
+                      size: 30,
+                    ),
+              onPressed: () {
+                checklove.isNotEmpty ? love("xoa") : love("them");
+                chitiet();
+
+                setState(() {});
+              },
+            ),
           ],
         ),
         //Mô tả
@@ -91,12 +141,16 @@ class _DetaiPlaceState extends State<DetaiPlace> {
               padding: const EdgeInsets.all(20),
               child: Text(
                   "Miền: ${chitietdiadanh.elementAt(0)['ten_mien'].toString()}",
+                  style: const TextStyle(
+                      fontSize: 20, fontWeight: FontWeight.w500),
                   textAlign: TextAlign.justify),
             ),
             Padding(
               padding: const EdgeInsets.all(20),
               child: Text(
                   "Vùng: ${chitietdiadanh.elementAt(0)['ten_vung'].toString()}",
+                  style: const TextStyle(
+                      fontSize: 20, fontWeight: FontWeight.w500),
                   textAlign: TextAlign.justify),
             ),
           ],
@@ -136,31 +190,15 @@ class _DetaiPlaceState extends State<DetaiPlace> {
                                       fontWeight: FontWeight.w300))
                             ],
                           ),
-                          const Icon(
-                            Icons.star,
-                            color: Colors.red,
-                            size: 50,
-                          ),
-                          const Icon(
-                            Icons.star,
-                            color: Colors.red,
-                            size: 50,
-                          ),
-                          const Icon(
-                            Icons.star,
-                            color: Colors.red,
-                            size: 50,
-                          ),
-                          const Icon(
-                            Icons.star,
-                            color: Colors.red,
-                            size: 50,
-                          ),
-                          const Icon(
-                            Icons.star,
-                            color: Colors.red,
-                            size: 50,
-                          ),
+                          RatingBar.builder(
+                              minRating: 1,
+                              itemBuilder: (context, _) =>
+                                  const Icon(Icons.star, color: Colors.amber),
+                              onRatingUpdate: (raiting) {
+                                setState(() {
+                                  rate = raiting;
+                                });
+                              })
                         ],
                       ),
                     ],
@@ -168,7 +206,7 @@ class _DetaiPlaceState extends State<DetaiPlace> {
                 ),
               ),
               Container(
-                height: 80,
+                height: 120,
                 width: double.infinity,
                 decoration: BoxDecoration(
                   color: Colors.blue[400],
@@ -176,37 +214,66 @@ class _DetaiPlaceState extends State<DetaiPlace> {
                       bottomLeft: Radius.circular(10),
                       bottomRight: Radius.circular(10)),
                 ),
-                child: const Padding(
-                  padding: EdgeInsets.all(10),
-                  child: Text(
-                    "aloalo",
-                    textAlign: TextAlign.center,
-                    style: TextStyle(fontSize: 25, fontWeight: FontWeight.w300),
-                  ),
-                ),
+                child: Padding(
+                    padding: const EdgeInsets.only(top: 8),
+                    child: Column(
+                      children: [
+                        const SizedBox(
+                          height: 80,
+                          child: TextField(
+                            decoration: InputDecoration(
+                              border: OutlineInputBorder(),
+                              labelText: 'Nhận xét',
+                            ),
+                          ),
+                        ),
+                        SizedBox(
+                          height: 20,
+                          child: ElevatedButton(
+                            onPressed: () {},
+                            style: ElevatedButton.styleFrom(
+                              primary: Colors.green, // background
+                              onPrimary: Colors.white, // foreground
+                            ),
+                            child: const Text('Gửi',
+                                style: TextStyle(fontSize: 20)),
+                          ),
+                        )
+                      ],
+                    )),
               ),
               Column(
                 children: [
-                  Container(
-                    child: const Text(
-                      'Quán Ăn',
-                      style:
-                          TextStyle(fontSize: 20, fontWeight: FontWeight.bold),
-                    ),
+                  Row(
+                    children: const [
+                      Padding(
+                        padding: EdgeInsets.symmetric(vertical: 8.0),
+                        child: Text(
+                          'QUÁN ĂN GẦN NHẤT',
+                          style: TextStyle(
+                              fontSize: 20, fontWeight: FontWeight.w800),
+                        ),
+                      ),
+                    ],
                   ),
-                  Container(
-                    height: 200,
-                    child: ListView(
-                      scrollDirection: Axis.horizontal,
-                      children: [
-                        ListQuanAn("avt.jpg", "Sườn bì chả"),
-                        ListQuanAn("avt.jpg", "Sườn bì chả"),
-                        ListQuanAn("avt.jpg", "Sườn bì chả"),
-                        ListQuanAn("avt.jpg", "Sườn bì chả"),
-                        ListQuanAn("avt.jpg", "Sườn bì chả")
-                      ],
-                    ),
-                  ),
+                  listquanan.isNotEmpty
+                      ? SizedBox(
+                          height: 200,
+                          child: ListView.builder(
+                            itemCount: listquanan.length,
+                            scrollDirection: Axis.horizontal,
+                            itemBuilder: (BuildContext context, int index) {
+                              return QuanAn(
+                                  listquanan
+                                      .elementAt(index)["hinh_anh"]
+                                      .toString(),
+                                  listquanan
+                                      .elementAt(index)["ten_quan"]
+                                      .toString());
+                            },
+                          ),
+                        )
+                      : const Text("Chưa có danh sách quán ăn"),
                 ],
               )
             ],
@@ -217,8 +284,10 @@ class _DetaiPlaceState extends State<DetaiPlace> {
   }
 
   // ignore: non_constant_identifier_names
-  Container ListQuanAn(String hinhAnh, String tenQuan) {
+  Container QuanAn(String hinhAnh, String tenQuan) {
     return Container(
+      width: 180,
+      height: 184,
       margin: const EdgeInsets.all(7),
       child: Stack(
         children: [
@@ -227,15 +296,15 @@ class _DetaiPlaceState extends State<DetaiPlace> {
             height: 184,
             decoration: const BoxDecoration(
               borderRadius: BorderRadius.all(Radius.circular(12)),
-              color: Colors.blue,
+              color: Colors.black12,
             ),
           ),
           Column(
             children: [
               ClipRRect(
                 borderRadius: BorderRadius.circular(12),
-                child: Image.asset(
-                  'images/user/$hinhAnh',
+                child: Image.network(
+                  'http://10.0.2.2/travel/img/$hinhAnh',
                   height: 140,
                   width: 180,
                   fit: BoxFit.cover,
@@ -244,7 +313,6 @@ class _DetaiPlaceState extends State<DetaiPlace> {
             ],
           ),
           Container(
-            width: 100,
             padding: const EdgeInsets.fromLTRB(12, 150, 0, 0),
             child: Column(
               children: [
@@ -255,8 +323,9 @@ class _DetaiPlaceState extends State<DetaiPlace> {
                       fontSize: 16,
                       fontWeight: FontWeight.bold),
                   overflow: TextOverflow.ellipsis,
-                  maxLines: 2,
-                )
+                  maxLines: 1,
+                  softWrap: false,
+                ),
               ],
             ),
           )
