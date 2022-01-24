@@ -1,6 +1,5 @@
 import 'package:du_lich_login/LoginForgotSignup/signup_form.dart';
 import 'package:flutter/material.dart';
-import '../TaskBar/Home/home.dart';
 
 class Forgotform extends StatefulWidget {
   const Forgotform({Key? key}) : super(key: key);
@@ -75,7 +74,7 @@ class _ForgotformState extends State<Forgotform> {
                       Navigator.push(
                         context,
                         MaterialPageRoute(
-                            builder: (context) => const HomeScreen()),
+                            builder: (context) => const Forgotform()),
                       );
                     },
                     style: OutlinedButton.styleFrom(

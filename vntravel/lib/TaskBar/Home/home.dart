@@ -1,15 +1,19 @@
+// ignore_for_file: import_of_legacy_library_into_null_safe
+
 import 'dart:convert';
 import 'package:du_lich_login/LoginForgotSignup/loginform.dart';
+import 'package:du_lich_login/TaskBar/News/share.dart';
 import 'package:flutter/foundation.dart';
 import 'package:flutter/material.dart';
-// ignore: import_of_legacy_library_into_null_safe
 import 'package:flutter_session/flutter_session.dart';
 import '../../api.dart';
 import 'detailplace.dart';
 import 'dart:math' as math;
 
+// ignore: must_be_immutable
 class HomeScreen extends StatefulWidget {
-  const HomeScreen({Key? key}) : super(key: key);
+  Map<String, dynamic> taiKhoan;
+  HomeScreen({Key? key, required this.taiKhoan}) : super(key: key);
 
   @override
   _HomeScreenState createState() => _HomeScreenState();
@@ -91,28 +95,36 @@ class _HomeScreenState extends State<HomeScreen> {
               ),
             ),
           ),
-          body: const TabBarView(
-            children: [TabTravel(), TabTravel(), TabTravel(), Text('data')],
+          body: TabBarView(
+            children: [
+              TabTravel(
+                taiKhoan: widget.taiKhoan,
+              ),
+              TabTravel(
+                taiKhoan: widget.taiKhoan,
+              ),
+              TabTravel(
+                taiKhoan: widget.taiKhoan,
+              ),
+              const Text('data')
+            ],
           )),
     );
   }
 }
 
+late Map<String, dynamic> chiTietTaiKhoan;
+
+// ignore: must_be_immutable
 class TabTravel extends StatefulWidget {
-  const TabTravel({Key? key}) : super(key: key);
+  Map<String, dynamic> taiKhoan;
+  TabTravel({Key? key, required this.taiKhoan}) : super(key: key);
 
   @override
   _TabTravelState createState() => _TabTravelState();
 }
 
-String username = "";
-
 class _TabTravelState extends State<TabTravel> {
-  Future<void> getSession() async {
-    username = await FlutterSession().get("myData");
-    setState(() {});
-  }
-
   Future<void> loaddata() async {
     await API(url: "http://10.0.2.2/travel/api/listdiadanh.php")
         .getDataString()
@@ -131,23 +143,22 @@ class _TabTravelState extends State<TabTravel> {
   @override
   void initState() {
     super.initState();
-    getSession();
     loaddata();
   }
 
   @override
   Widget build(BuildContext context) {
+    chiTietTaiKhoan = widget.taiKhoan;
     return ListView(children: [
       listdiadanhhot.isNotEmpty
-          ? DiaDanhHot()
+          ? diaDanhHot()
           : const Center(child: CircularProgressIndicator()),
       ListDiaDanh(context, listdiadanh),
     ]);
   }
 }
 
-// ignore: non_constant_identifier_names
-SizedBox DiaDanhHot() {
+SizedBox diaDanhHot() {
   return SizedBox(
       height: 200,
       child: ListView.builder(
@@ -350,7 +361,19 @@ Wrap DiaDanh(BuildContext context, Iterable listdiadanh) {
                                             padding:
                                                 const EdgeInsets.only(left: 70),
                                             child: IconButton(
-                                              onPressed: () {},
+                                              onPressed: () {
+                                                Navigator.push(
+                                                    context,
+                                                    MaterialPageRoute(
+                                                        builder:
+                                                            (builder) => Share(
+                                                                  diadanh: listdiadanh
+                                                                      .elementAt(
+                                                                          i),
+                                                                  taiKhoan:
+                                                                      chiTietTaiKhoan,
+                                                                )));
+                                              },
                                               icon: Transform(
                                                   alignment: Alignment.center,
                                                   transform: Matrix4.rotationY(
@@ -372,3 +395,5 @@ Wrap DiaDanh(BuildContext context, Iterable listdiadanh) {
                 ),
               )));
 }
+
+// ignore: non_constant_identifier_names

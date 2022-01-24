@@ -18,6 +18,8 @@ class _DetaiPlaceState extends State<DetaiPlace> {
   Iterable chitietdiadanh = [];
   Iterable checklove = [];
   Iterable listquanan = [];
+  Iterable listluutru = [];
+
   double rate = 0;
   String username = "";
   Future<void> love(String type) async {
@@ -49,6 +51,18 @@ class _DetaiPlaceState extends State<DetaiPlace> {
         .then((value) {
       listquanan = json.decode(value);
     });
+    await API(
+            url: "http://10.0.2.2/travel/api/listluutru.php?id='${widget.id}'")
+        .getDataString()
+        .then((value) {
+      listluutru = json.decode(value);
+    });
+    await API(
+            url: "http://10.0.2.2/travel/api/listluutru.php?id='${widget.id}'")
+        .getDataString()
+        .then((value) {
+      listluutru = json.decode(value);
+    });
     setState(() {});
   }
 
@@ -69,6 +83,7 @@ class _DetaiPlaceState extends State<DetaiPlace> {
 
   @override
   Widget build(BuildContext context) {
+    print(widget.id);
     return Scaffold(
       appBar: AppBar(
         title: const Text("Travel"),
@@ -218,13 +233,12 @@ class _DetaiPlaceState extends State<DetaiPlace> {
                     padding: const EdgeInsets.only(top: 8),
                     child: Column(
                       children: [
-                        const SizedBox(
-                          height: 80,
+                        const Padding(
+                          padding: EdgeInsets.all(1.4),
                           child: TextField(
                             decoration: InputDecoration(
-                              border: OutlineInputBorder(),
-                              labelText: 'Nhận xét',
-                            ),
+                                hintText: 'Nhận xét', border: InputBorder.none),
+                            maxLines: 3,
                           ),
                         ),
                         SizedBox(
@@ -249,7 +263,7 @@ class _DetaiPlaceState extends State<DetaiPlace> {
                       Padding(
                         padding: EdgeInsets.symmetric(vertical: 8.0),
                         child: Text(
-                          'QUÁN ĂN GẦN NHẤT',
+                          'QUÁN ĂN',
                           style: TextStyle(
                               fontSize: 20, fontWeight: FontWeight.w800),
                         ),
@@ -258,24 +272,66 @@ class _DetaiPlaceState extends State<DetaiPlace> {
                   ),
                   listquanan.isNotEmpty
                       ? SizedBox(
-                          height: 200,
+                          height: 220,
                           child: ListView.builder(
                             itemCount: listquanan.length,
                             scrollDirection: Axis.horizontal,
                             itemBuilder: (BuildContext context, int index) {
-                              return QuanAn(
-                                  listquanan
-                                      .elementAt(index)["hinh_anh"]
-                                      .toString(),
-                                  listquanan
-                                      .elementAt(index)["ten_quan"]
-                                      .toString());
+                              return QuanAnLuuTru(
+                                listquanan
+                                    .elementAt(index)["hinh_anh"]
+                                    .toString(),
+                                listquanan
+                                    .elementAt(index)["ten_quan"]
+                                    .toString(),
+                                listquanan
+                                    .elementAt(index)["dia_chi"]
+                                    .toString(),
+                              );
                             },
                           ),
                         )
                       : const Text("Chưa có danh sách quán ăn"),
                 ],
-              )
+              ),
+              Column(
+                children: [
+                  Row(
+                    children: const [
+                      Padding(
+                        padding: EdgeInsets.symmetric(vertical: 8.0),
+                        child: Text(
+                          'LƯU TRÚ',
+                          style: TextStyle(
+                              fontSize: 20, fontWeight: FontWeight.w800),
+                        ),
+                      ),
+                    ],
+                  ),
+                  listluutru.isNotEmpty
+                      ? SizedBox(
+                          height: 220,
+                          child: ListView.builder(
+                            itemCount: listluutru.length,
+                            scrollDirection: Axis.horizontal,
+                            itemBuilder: (BuildContext context, int index) {
+                              return QuanAnLuuTru(
+                                listluutru
+                                    .elementAt(index)["hinh_anh"]
+                                    .toString(),
+                                listluutru
+                                    .elementAt(index)["ten_luu_tru"]
+                                    .toString(),
+                                listluutru
+                                    .elementAt(index)["dia_chi"]
+                                    .toString(),
+                              );
+                            },
+                          ),
+                        )
+                      : const Text("Chưa có danh sách quán ăn"),
+                ],
+              ),
             ],
           ),
         )
@@ -284,16 +340,16 @@ class _DetaiPlaceState extends State<DetaiPlace> {
   }
 
   // ignore: non_constant_identifier_names
-  Container QuanAn(String hinhAnh, String tenQuan) {
+  Container QuanAnLuuTru(String hinhAnh, String tenQuan, String diaChi) {
     return Container(
       width: 180,
-      height: 184,
+      height: 220,
       margin: const EdgeInsets.all(7),
       child: Stack(
         children: [
           Container(
             width: 180,
-            height: 184,
+            height: 200,
             decoration: const BoxDecoration(
               borderRadius: BorderRadius.all(Radius.circular(12)),
               color: Colors.black12,
@@ -313,7 +369,7 @@ class _DetaiPlaceState extends State<DetaiPlace> {
             ],
           ),
           Container(
-            padding: const EdgeInsets.fromLTRB(12, 150, 0, 0),
+            padding: const EdgeInsets.fromLTRB(8, 150, 8, 8),
             child: Column(
               children: [
                 Text(
@@ -325,6 +381,18 @@ class _DetaiPlaceState extends State<DetaiPlace> {
                   overflow: TextOverflow.ellipsis,
                   maxLines: 1,
                   softWrap: false,
+                ),
+                Padding(
+                  padding: const EdgeInsets.symmetric(vertical: 4.0),
+                  child: Text(
+                    diaChi,
+                    style: const TextStyle(
+                      color: Colors.black87,
+                    ),
+                    overflow: TextOverflow.ellipsis,
+                    maxLines: 1,
+                    softWrap: false,
+                  ),
                 ),
               ],
             ),

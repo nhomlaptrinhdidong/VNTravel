@@ -1,5 +1,4 @@
 import 'dart:convert';
-import 'dart:math';
 import 'package:flutter/material.dart';
 import '../../api.dart';
 import 'listbaiviet.dart';
@@ -11,19 +10,15 @@ class NewsScreen extends StatefulWidget {
   _NewsScreenState createState() => _NewsScreenState();
 }
 
-Random random = Random();
-int randomNumber = random.nextInt(100);
 Iterable listbaiviet = [];
 
 class _NewsScreenState extends State<NewsScreen> {
-  bool liked = false;
   Future<void> loaddata() async {
     await API(url: "http://10.0.2.2/travel/api/listbaiviet.php")
         .getDataString()
         .then((value) {
       listbaiviet = json.decode(value);
     });
-
     setState(() {});
   }
 
@@ -51,11 +46,7 @@ class _NewsScreenState extends State<NewsScreen> {
         automaticallyImplyLeading: false,
       ),
       body: listbaiviet.isNotEmpty
-          ? ListView(
-              children: [
-                ListBaiViet(listbaiviet: listbaiviet),
-              ],
-            )
+          ? ListBaiViet(listbaiviet: listbaiviet)
           : const Center(child: CircularProgressIndicator()),
     );
   }

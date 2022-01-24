@@ -41,7 +41,11 @@ class _LoginFormState extends State<LoginForm> {
           setSession();
           Navigator.pushAndRemoveUntil(
               context,
-              MaterialPageRoute(builder: (context) => const MainTask()),
+              MaterialPageRoute(
+                  builder: (context) => MainTask(
+                        name: _ten_dang_nhap.text,
+                        index: 0,
+                      )),
               (Route<dynamic> route) => false);
         } else {
           showDialog(

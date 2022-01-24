@@ -33,6 +33,12 @@ class _MyAppState extends State<MyApp> {
   Widget build(BuildContext context) {
     return MaterialApp(
         debugShowCheckedModeBanner: false,
-        home: username == "" ? const LoginForm() : const MainTask());
+        // ignore: unnecessary_null_comparison
+        home: username == null || username == ""
+            ? const LoginForm()
+            : MainTask(
+                name: username,
+                index: 0,
+              ));
   }
 }
