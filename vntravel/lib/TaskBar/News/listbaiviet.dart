@@ -3,6 +3,7 @@ import 'dart:convert';
 import 'package:du_lich_login/TaskBar/Home/detailplace.dart';
 import 'package:du_lich_login/TaskBar/Profile/profile.dart';
 import 'package:flutter/material.dart';
+// ignore: import_of_legacy_library_into_null_safe
 import 'package:flutter_session/flutter_session.dart';
 
 import '../../api.dart';
@@ -77,8 +78,6 @@ class _DescriptionTextWidgetState extends State<DescriptionTextWidget> {
     );
   }
 }
-
-bool liked = false;
 
 // ignore: must_be_immutable
 class ListBaiViet extends StatefulWidget {
@@ -204,7 +203,11 @@ class _ListBaiVietState extends State<ListBaiViet> {
                                       )
                                     ],
                                   ),
-                                )
+                                ),
+                                IconButton(
+                                    onPressed: () {},
+                                    iconSize: 30,
+                                    icon: const Icon(Icons.more_horiz_sharp))
                               ],
                             ),
                           ),
@@ -416,7 +419,7 @@ class _ListBaiVietState extends State<ListBaiViet> {
               );
             },
           )
-        : Center(
+        : const Center(
             child: CircularProgressIndicator(),
           );
   }
