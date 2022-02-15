@@ -386,9 +386,10 @@ class _ListBaiVietState extends State<ListBaiViet> {
                                   )
                                 : const SizedBox(),
                           ),
-                          const Padding(
-                            padding: EdgeInsets.only(right: 12),
-                            child: Text("data"),
+                          Padding(
+                            padding: const EdgeInsets.only(right: 12),
+                            child: Text(widget.listbaiviet
+                                .elementAt(index)['luot_xem']),
                           )
                         ],
                       ),

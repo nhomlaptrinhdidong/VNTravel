@@ -42,7 +42,7 @@ class _MainTaskState extends State<MainTask> {
   void initState() {
     super.initState();
     getData();
-    widget.index == 1 ? currentTab = 1 : currentTab = 0;
+    // widget.index == 1 ? currentTab = 1 : currentTab = 0;
     currentTab = widget.index;
   }
 
@@ -51,7 +51,11 @@ class _MainTaskState extends State<MainTask> {
     return chitiettaikhoan.isNotEmpty
         ? Scaffold(
             body: PageStorage(
-              child: currentTab == 1 ? const NewsScreen() : currentScreen,
+              child: currentTab == 1
+                  ? const NewsScreen()
+                  : (currentTab == 4
+                      ? SettingScreen(taiKhoan: chitiettaikhoan.elementAt(0))
+                      : currentScreen),
               bucket: bucket,
             ),
             floatingActionButtonLocation:
@@ -192,7 +196,9 @@ class _MainTaskState extends State<MainTask> {
                               MaterialButton(
                                 onPressed: () {
                                   setState(() {
-                                    currentScreen = const SettingScreen();
+                                    currentScreen = SettingScreen(
+                                      taiKhoan: chitiettaikhoan.elementAt(0),
+                                    );
                                     currentTab = 4;
                                   });
                                 },

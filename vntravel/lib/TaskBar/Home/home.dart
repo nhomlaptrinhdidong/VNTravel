@@ -309,6 +309,25 @@ Wrap DiaDanh(BuildContext context, Iterable listdiadanh) {
                           ),
                         ],
                       ),
+                      Padding(
+                        padding: const EdgeInsets.only(left: 130),
+                        child: IconButton(
+                          onPressed: () {
+                            Navigator.push(
+                                context,
+                                MaterialPageRoute(
+                                    builder: (builder) => Share(
+                                          diadanh: listdiadanh.elementAt(i),
+                                          taiKhoan: chiTietTaiKhoan,
+                                        )));
+                          },
+                          icon: Transform(
+                              alignment: Alignment.center,
+                              transform: Matrix4.rotationY(math.pi),
+                              child: const Icon(Icons.reply_all_sharp,
+                                  color: Colors.white)),
+                        ),
+                      ),
                       Container(
                           margin: const EdgeInsets.only(top: 120),
                           height: 70,
@@ -336,52 +355,21 @@ Wrap DiaDanh(BuildContext context, Iterable listdiadanh) {
                                     Row(
                                       children: [
                                         Row(children: [
-                                          const Padding(
-                                            padding: EdgeInsets.symmetric(
-                                                horizontal: 3),
-                                            child: Icon(
-                                              Icons.star,
-                                              color: Colors.red,
-                                            ),
-                                          ),
                                           Container(
-                                            padding:
-                                                const EdgeInsets.only(left: 3),
-                                            child: Text(
-                                                listdiadanh
-                                                    .elementAt(i)["danh_gia"]
-                                                    .toString(),
-                                                style: const TextStyle(
+                                              width: 160,
+                                              padding: const EdgeInsets.all(3),
+                                              child: Text(
+                                                  listdiadanh
+                                                      .elementAt(i)["mo_ta"]
+                                                      .toString(),
+                                                  // overflow:
+                                                  //     TextOverflow.ellipsis,
+                                                  maxLines: 2,
+                                                  style: const TextStyle(
+                                                    fontSize: 12,
                                                     color: Colors.white,
-                                                    fontSize: 18,
-                                                    fontWeight:
-                                                        FontWeight.bold)),
-                                          ),
-                                          Padding(
-                                            padding:
-                                                const EdgeInsets.only(left: 70),
-                                            child: IconButton(
-                                              onPressed: () {
-                                                Navigator.push(
-                                                    context,
-                                                    MaterialPageRoute(
-                                                        builder:
-                                                            (builder) => Share(
-                                                                  diadanh: listdiadanh
-                                                                      .elementAt(
-                                                                          i),
-                                                                  taiKhoan:
-                                                                      chiTietTaiKhoan,
-                                                                )));
-                                              },
-                                              icon: Transform(
-                                                  alignment: Alignment.center,
-                                                  transform: Matrix4.rotationY(
-                                                      math.pi),
-                                                  child: const Icon(Icons.reply,
-                                                      color: Colors.white)),
-                                            ),
-                                          ),
+                                                    fontWeight: FontWeight.w500,
+                                                  ))),
                                         ]),
                                       ],
                                     )

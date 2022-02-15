@@ -1,11 +1,11 @@
 import 'dart:convert';
 
 import 'package:du_lich_login/TaskBar/News/listbaiviet.dart';
-import 'package:du_lich_login/TaskBar/Setting/setting.dart';
 import 'package:flutter/material.dart';
 // ignore: import_of_legacy_library_into_null_safe
 import 'package:flutter_session/flutter_session.dart';
 import '../../api.dart';
+import '../main_taskbar.dart';
 
 // ignore: must_be_immutable
 class ProfileScreen extends StatefulWidget {
@@ -42,6 +42,7 @@ class _ProfileScreenState extends State<ProfileScreen> {
     return Scaffold(
         appBar: AppBar(
           title: const Text('VNTravel'),
+          // automaticallyImplyLeading: false,
           actions: <Widget>[
             IconButton(
               onPressed: () {},
@@ -83,7 +84,7 @@ class _ProfileScreenState extends State<ProfileScreen> {
                             child: const Icon(Icons.camera_alt),
                           ),
                         )),
-                    const Positioned(
+                    Positioned(
                         top: 100,
                         left: 20,
                         child: CircleAvatar(
@@ -91,7 +92,8 @@ class _ProfileScreenState extends State<ProfileScreen> {
                           backgroundColor: Colors.white,
                           child: CircleAvatar(
                             radius: 75,
-                            backgroundImage: AssetImage("images/user/avt.jpg"),
+                            backgroundImage: NetworkImage(
+                                "http://10.0.2.2/travel/img/${widget.taiKhoan["avt"].toString()}"),
                           ),
                         )),
                     Positioned(
@@ -116,11 +118,6 @@ class _ProfileScreenState extends State<ProfileScreen> {
                           fontSize: 28,
                           fontStyle: FontStyle.normal),
                     ),
-                    const Text(
-                      '(Bill)',
-                      style:
-                          TextStyle(fontWeight: FontWeight.bold, fontSize: 15),
-                    ),
                   ],
                 ),
                 const SizedBox(height: 15),
@@ -133,7 +130,10 @@ class _ProfileScreenState extends State<ProfileScreen> {
                           Navigator.push(
                               context,
                               MaterialPageRoute(
-                                  builder: (context) => const SettingScreen()));
+                                  builder: (builder) => MainTask(
+                                        name: widget.taiKhoan['ten_dang_nhap'],
+                                        index: 4,
+                                      )));
                         },
                         child: Row(
                           children: <Widget>[

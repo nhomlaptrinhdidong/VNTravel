@@ -9,6 +9,12 @@ class SignupForm extends StatefulWidget {
 }
 
 class _SignupFormState extends State<SignupForm> {
+  TextEditingController fullname = TextEditingController();
+  TextEditingController username = TextEditingController();
+  TextEditingController password = TextEditingController();
+  TextEditingController email = TextEditingController();
+  TextEditingController phone = TextEditingController();
+
   @override
   Widget build(BuildContext context) {
     return Scaffold(
@@ -28,14 +34,14 @@ class _SignupFormState extends State<SignupForm> {
               ),
               Container(
                 padding: const EdgeInsets.fromLTRB(30, 10, 30, 30),
-                height: 370,
+                height: 440,
                 decoration: BoxDecoration(
                   color: const Color(0xff7209b7),
                   borderRadius: BorderRadius.circular(10.0),
                 ),
                 child: Column(
-                  children: const [
-                    Padding(
+                  children: [
+                    const Padding(
                         padding: EdgeInsets.fromLTRB(0, 15, 0, 10),
                         child: Text(
                           'Register Account',
@@ -45,18 +51,31 @@ class _SignupFormState extends State<SignupForm> {
                               fontWeight: FontWeight.w400),
                         )),
                     Padding(
-                      padding: EdgeInsets.only(bottom: 10),
+                      padding: const EdgeInsets.only(bottom: 10),
                       child: TextField(
-                        decoration: InputDecoration(
+                        controller: fullname,
+                        decoration: const InputDecoration(
+                          labelText: "FULLNAME",
+                          labelStyle:
+                              TextStyle(color: Colors.white, fontSize: 13),
+                        ),
+                      ),
+                    ),
+                    Padding(
+                      padding: const EdgeInsets.only(bottom: 10),
+                      child: TextField(
+                        controller: username,
+                        decoration: const InputDecoration(
                             labelText: "USERNAME",
                             labelStyle:
                                 TextStyle(color: Colors.white, fontSize: 13)),
                       ),
                     ),
                     Padding(
-                      padding: EdgeInsets.only(bottom: 10),
+                      padding: const EdgeInsets.only(bottom: 10),
                       child: TextField(
-                        decoration: InputDecoration(
+                        controller: password,
+                        decoration: const InputDecoration(
                           labelText: "PASSWORD",
                           labelStyle:
                               TextStyle(color: Colors.white, fontSize: 13),
@@ -64,9 +83,10 @@ class _SignupFormState extends State<SignupForm> {
                       ),
                     ),
                     Padding(
-                      padding: EdgeInsets.only(bottom: 10),
+                      padding: const EdgeInsets.only(bottom: 10),
                       child: TextField(
-                        decoration: InputDecoration(
+                        controller: email,
+                        decoration: const InputDecoration(
                           labelText: "EMAIL",
                           labelStyle:
                               TextStyle(color: Colors.white, fontSize: 13),
@@ -74,17 +94,48 @@ class _SignupFormState extends State<SignupForm> {
                       ),
                     ),
                     Padding(
-                      padding: EdgeInsets.only(bottom: 10),
+                      padding: const EdgeInsets.only(bottom: 10),
                       child: TextField(
-                        decoration: InputDecoration(
+                        controller: phone,
+                        decoration: const InputDecoration(
                           labelText: "PHONE NUMBER",
                           labelStyle:
                               TextStyle(color: Colors.white, fontSize: 13),
                         ),
                       ),
-                    )
+                    ),
                   ],
                 ),
+              ),
+              GridView.builder(
+                scrollDirection: Axis.vertical,
+                shrinkWrap: true,
+                gridDelegate: const SliverGridDelegateWithFixedCrossAxisCount(
+                  crossAxisSpacing: 0,
+                  mainAxisSpacing: 0,
+                  crossAxisCount: 3,
+                ),
+                itemCount: 3,
+                itemBuilder: (context, index) {
+                  return GestureDetector(
+                    onTap: () {},
+                    child: Padding(
+                      padding: const EdgeInsets.all(8.0),
+                      child: Container(
+                        width: 10,
+                        height: 10,
+                        decoration: BoxDecoration(
+                          image: DecorationImage(
+                            fit: BoxFit.cover,
+                            image: NetworkImage(
+                                'http://10.0.2.2/travel/img/avt$index.jpg'),
+                          ),
+                        ),
+                      ),
+                    ),
+                  );
+                  // Item rendering
+                },
               ),
               Padding(
                 padding: const EdgeInsets.fromLTRB(0, 20, 0, 0),

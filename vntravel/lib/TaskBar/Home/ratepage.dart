@@ -1,8 +1,17 @@
+import 'dart:convert';
+
+import 'package:du_lich_login/TaskBar/Home/detailplace.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_rating_bar/flutter_rating_bar.dart';
 
+import '../../api.dart';
+
+// ignore: must_be_immutable
 class Rate extends StatefulWidget {
-  const Rate({Key? key}) : super(key: key);
+  String username;
+  String idDiaDanh;
+  Rate({Key? key, required this.username, required this.idDiaDanh})
+      : super(key: key);
 
   @override
   _RateState createState() => _RateState();
@@ -10,6 +19,28 @@ class Rate extends StatefulWidget {
 
 class _RateState extends State<Rate> {
   double rate = 0;
+  bool result = false;
+  TextEditingController noiDung = TextEditingController();
+  Future<void> upRate() async {
+    {
+      await API(
+              url:
+                  "http://10.0.2.2/travel/api/themdanhgia.php?id_dia_danh='${widget.idDiaDanh}'&id_nguoi_dung='${widget.username}'&so_sao='$rate'&noi_dung='${noiDung.text}'")
+          .getDataString()
+          .then((value) {
+        result = json.decode(value);
+      });
+      setState(() {});
+    }
+    if (result == true) {
+      Navigator.push(
+          context,
+          MaterialPageRoute(
+              builder: (builder) => DetaiPlace(id: widget.idDiaDanh)));
+    } else {
+      const CircularProgressIndicator();
+    }
+  }
 
   @override
   Widget build(BuildContext context) {
@@ -76,10 +107,11 @@ class _RateState extends State<Rate> {
                     padding: const EdgeInsets.only(top: 8),
                     child: Column(
                       children: [
-                        const Padding(
-                          padding: EdgeInsets.all(1.4),
+                        Padding(
+                          padding: const EdgeInsets.all(1.4),
                           child: TextField(
-                            decoration: InputDecoration(
+                            controller: noiDung,
+                            decoration: const InputDecoration(
                                 hintText: 'Nhận xét', border: InputBorder.none),
                             maxLines: 3,
                           ),
@@ -87,7 +119,9 @@ class _RateState extends State<Rate> {
                         SizedBox(
                           height: 20,
                           child: ElevatedButton(
-                            onPressed: () {},
+                            onPressed: () {
+                              upRate();
+                            },
                             style: ElevatedButton.styleFrom(
                               primary: Colors.green, // background
                               onPrimary: Colors.white, // foreground

@@ -1,4 +1,6 @@
 import 'dart:convert';
+import 'package:du_lich_login/TaskBar/Home/chitietluutru.dart';
+import 'package:du_lich_login/TaskBar/Home/chitietquanan.dart';
 import 'package:du_lich_login/TaskBar/Home/ratepage.dart';
 import 'package:flutter/material.dart';
 // ignore: import_of_legacy_library_into_null_safe
@@ -6,6 +8,7 @@ import 'package:flutter_session/flutter_session.dart';
 import 'package:intl/intl.dart';
 import 'package:map_launcher/map_launcher.dart';
 import '../../api.dart';
+import 'chitietmonan.dart';
 
 class DetaiPlace extends StatefulWidget {
   final String id;
@@ -212,8 +215,11 @@ class _DetaiPlaceState extends State<DetaiPlace> {
             ),
             GestureDetector(
               onTap: () {
-                Navigator.push(context,
-                    MaterialPageRoute(builder: (builder) => const Rate()));
+                Navigator.push(
+                    context,
+                    MaterialPageRoute(
+                        builder: (builder) =>
+                            Rate(username: username, idDiaDanh: widget.id)));
               },
               child: Container(
                 margin: const EdgeInsets.symmetric(horizontal: 115),
@@ -261,69 +267,79 @@ class _DetaiPlaceState extends State<DetaiPlace> {
                         itemCount: listmonan.length,
                         scrollDirection: Axis.horizontal,
                         itemBuilder: (BuildContext context, int index) {
-                          return Container(
-                            width: 180,
-                            height: 220,
-                            margin: const EdgeInsets.all(7),
-                            child: Stack(
-                              children: [
-                                Container(
-                                  width: 180,
-                                  height: 210,
-                                  decoration: const BoxDecoration(
-                                    borderRadius:
-                                        BorderRadius.all(Radius.circular(12)),
-                                    color: Colors.black12,
-                                  ),
-                                ),
-                                Column(
-                                  children: [
-                                    ClipRRect(
-                                      borderRadius: BorderRadius.circular(12),
-                                      child: Image.network(
-                                        'http://10.0.2.2/travel/img/${listmonan.elementAt(index)['hinh_anh_mon_an']}',
-                                        height: 140,
-                                        width: 180,
-                                        fit: BoxFit.cover,
-                                      ),
+                          return GestureDetector(
+                            onTap: () {
+                              Navigator.push(
+                                  context,
+                                  MaterialPageRoute(
+                                      builder: (builder) => DetailDish(
+                                          monAn: listmonan.elementAt(index))));
+                            },
+                            child: Container(
+                              width: 180,
+                              height: 220,
+                              margin: const EdgeInsets.all(7),
+                              child: Stack(
+                                children: [
+                                  Container(
+                                    width: 180,
+                                    height: 210,
+                                    decoration: const BoxDecoration(
+                                      borderRadius:
+                                          BorderRadius.all(Radius.circular(12)),
+                                      color: Colors.black12,
                                     ),
-                                  ],
-                                ),
-                                Container(
-                                  padding:
-                                      const EdgeInsets.fromLTRB(8, 150, 8, 8),
-                                  child: Column(
+                                  ),
+                                  Column(
                                     children: [
-                                      Text(
-                                        listmonan.elementAt(index)['ten_mon'],
-                                        style: const TextStyle(
-                                            color: Colors.black87,
-                                            fontSize: 16,
-                                            fontWeight: FontWeight.bold),
-                                        overflow: TextOverflow.ellipsis,
-                                        maxLines: 1,
-                                        softWrap: false,
-                                      ),
-                                      Text(NumberFormat.currency(locale: 'vi')
-                                          .format(int.parse(listmonan
-                                              .elementAt(index)['gia_tien']))),
-                                      Padding(
-                                        padding: const EdgeInsets.symmetric(
-                                            vertical: 4.0),
-                                        child: Text(
-                                          listmonan.elementAt(index)['mo_ta'],
-                                          style: const TextStyle(
-                                            color: Colors.black87,
-                                          ),
-                                          overflow: TextOverflow.ellipsis,
-                                          maxLines: 1,
-                                          softWrap: false,
+                                      ClipRRect(
+                                        borderRadius: BorderRadius.circular(12),
+                                        child: Image.network(
+                                          'http://10.0.2.2/travel/img/${listmonan.elementAt(index)['hinh_anh_mon_an']}',
+                                          height: 140,
+                                          width: 180,
+                                          fit: BoxFit.cover,
                                         ),
                                       ),
                                     ],
                                   ),
-                                )
-                              ],
+                                  Container(
+                                    padding:
+                                        const EdgeInsets.fromLTRB(8, 150, 8, 8),
+                                    child: Column(
+                                      children: [
+                                        Text(
+                                          listmonan.elementAt(index)['ten_mon'],
+                                          style: const TextStyle(
+                                              color: Colors.black87,
+                                              fontSize: 16,
+                                              fontWeight: FontWeight.bold),
+                                          overflow: TextOverflow.ellipsis,
+                                          maxLines: 1,
+                                          softWrap: false,
+                                        ),
+                                        Text(NumberFormat.currency(locale: 'vi')
+                                            .format(int.parse(
+                                                listmonan.elementAt(
+                                                    index)['gia_tien']))),
+                                        Padding(
+                                          padding: const EdgeInsets.symmetric(
+                                              vertical: 4.0),
+                                          child: Text(
+                                            listmonan.elementAt(index)['mo_ta'],
+                                            style: const TextStyle(
+                                              color: Colors.black87,
+                                            ),
+                                            overflow: TextOverflow.ellipsis,
+                                            maxLines: 1,
+                                            softWrap: false,
+                                          ),
+                                        ),
+                                      ],
+                                    ),
+                                  )
+                                ],
+                              ),
                             ),
                           );
                         },
@@ -436,7 +452,7 @@ class _DetaiPlaceState extends State<DetaiPlace> {
                             },
                           ),
                         )
-                      : const Text("Chưa có danh sách quán ăn"),
+                      : const Text("Chưa có nhận xét nào"),
                 ],
               ),
             ],
@@ -467,10 +483,23 @@ class _DetaiPlaceState extends State<DetaiPlace> {
                   itemCount: listquanan.length,
                   scrollDirection: Axis.horizontal,
                   itemBuilder: (BuildContext context, int index) {
-                    return QuanAnLuuTru(
-                      listquanan.elementAt(index)["hinh_anh"].toString(),
-                      listquanan.elementAt(index)["ten_quan"].toString(),
-                      listquanan.elementAt(index)["dia_chi"].toString(),
+                    return GestureDetector(
+                      onTap: () {
+                        Navigator.push(
+                            context,
+                            MaterialPageRoute(
+                                builder: (builder) => DetailRestaurant(
+                                      quanAn: listquanan.elementAt(index),
+                                    )));
+                      },
+                      child: QuanAnLuuTru(
+                          listquanan.elementAt(index)["hinh_anh"].toString(),
+                          listquanan.elementAt(index)["ten_quan"].toString(),
+                          listquanan.elementAt(index)["dia_chi"].toString(),
+                          listquanan.elementAt(index),
+                          DetailRestaurant(
+                            quanAn: listquanan.elementAt(index),
+                          )),
                     );
                   },
                 ),
@@ -502,77 +531,85 @@ class _DetaiPlaceState extends State<DetaiPlace> {
                   scrollDirection: Axis.horizontal,
                   itemBuilder: (BuildContext context, int index) {
                     return QuanAnLuuTru(
-                      listluutru.elementAt(index)["hinh_anh"].toString(),
-                      listluutru.elementAt(index)["ten_luu_tru"].toString(),
-                      listluutru.elementAt(index)["dia_chi"].toString(),
-                    );
+                        listluutru.elementAt(index)["hinh_anh"].toString(),
+                        listluutru.elementAt(index)["ten_luu_tru"].toString(),
+                        listluutru.elementAt(index)["dia_chi"].toString(),
+                        listluutru.elementAt(index),
+                        DetailHotel(luuTru: listluutru.elementAt(index)));
                   },
                 ),
               )
-            : const Text("Chưa có danh sách quán ăn"),
+            : const Text("Chưa có danh sách nơi lưu trú"),
       ],
     );
   }
 
   // ignore: non_constant_identifier_names
-  Container QuanAnLuuTru(String hinhAnh, String tenQuan, String diaChi) {
-    return Container(
-      width: 180,
-      height: 220,
-      margin: const EdgeInsets.all(7),
-      child: Stack(
-        children: [
-          Container(
-            width: 180,
-            height: 200,
-            decoration: const BoxDecoration(
-              borderRadius: BorderRadius.all(Radius.circular(12)),
-              color: Colors.black12,
-            ),
-          ),
-          Column(
-            children: [
-              ClipRRect(
-                borderRadius: BorderRadius.circular(12),
-                child: Image.network(
-                  'http://10.0.2.2/travel/img/$hinhAnh',
-                  height: 140,
-                  width: 180,
-                  fit: BoxFit.cover,
-                ),
+  GestureDetector QuanAnLuuTru(String hinhAnh, String tenQuan, String diaChi,
+      Map<String, dynamic> quanAnLuuTru, Widget screen) {
+    return GestureDetector(
+      onTap: () {
+        Navigator.push(
+            context, MaterialPageRoute(builder: (builder) => screen));
+      },
+      child: Container(
+        width: 180,
+        height: 220,
+        margin: const EdgeInsets.all(7),
+        child: Stack(
+          children: [
+            Container(
+              width: 180,
+              height: 200,
+              decoration: const BoxDecoration(
+                borderRadius: BorderRadius.all(Radius.circular(12)),
+                color: Colors.black12,
               ),
-            ],
-          ),
-          Container(
-            padding: const EdgeInsets.fromLTRB(8, 150, 8, 8),
-            child: Column(
+            ),
+            Column(
               children: [
-                Text(
-                  tenQuan,
-                  style: const TextStyle(
-                      color: Colors.black87,
-                      fontSize: 16,
-                      fontWeight: FontWeight.bold),
-                  overflow: TextOverflow.ellipsis,
-                  maxLines: 1,
-                  softWrap: false,
-                ),
-                Padding(
-                  padding: const EdgeInsets.symmetric(vertical: 4.0),
-                  child: Text(
-                    diaChi,
-                    style: const TextStyle(
-                      color: Colors.black87,
-                    ),
-                    overflow: TextOverflow.ellipsis,
-                    maxLines: 1,
-                    softWrap: false,
+                ClipRRect(
+                  borderRadius: BorderRadius.circular(12),
+                  child: Image.network(
+                    'http://10.0.2.2/travel/img/$hinhAnh',
+                    height: 140,
+                    width: 180,
+                    fit: BoxFit.cover,
                   ),
                 ),
               ],
             ),
-          )
-        ],
+            Container(
+              padding: const EdgeInsets.fromLTRB(8, 150, 8, 8),
+              child: Column(
+                children: [
+                  Text(
+                    tenQuan,
+                    style: const TextStyle(
+                        color: Colors.black87,
+                        fontSize: 16,
+                        fontWeight: FontWeight.bold),
+                    overflow: TextOverflow.ellipsis,
+                    maxLines: 1,
+                    softWrap: false,
+                  ),
+                  Padding(
+                    padding: const EdgeInsets.symmetric(vertical: 4.0),
+                    child: Text(
+                      diaChi,
+                      style: const TextStyle(
+                        color: Colors.black87,
+                      ),
+                      overflow: TextOverflow.ellipsis,
+                      maxLines: 1,
+                      softWrap: false,
+                    ),
+                  ),
+                ],
+              ),
+            )
+          ],
+        ),
       ),
     );
   }
